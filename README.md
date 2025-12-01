@@ -16,10 +16,10 @@
 ## ตัวอย่างหน้าจอ
 
 ### หน้าเข้าสู่ระบบ (Login)
-![หน้าเข้าสู่ระบบ](/Users/kimhun55/.gemini/antigravity/brain/c241e224-37a4-49d9-8628-193602d031a2/readme_login_screen_1764554216651.png)
+![หน้าเข้าสู่ระบบ](https://github.com/kimhun55/task-todolist-vue3-local-store/blob/main/readme/home.png)
 
 ### หน้าหลัก (Main App)
-![หน้าหลัก](/Users/kimhun55/.gemini/antigravity/brain/c241e224-37a4-49d9-8628-193602d031a2/readme_main_app_screen_1764554231887.png)
+![หน้าหลัก](https://github.com/kimhun55/task-todolist-vue3-local-store/blob/main/readme/login.png)
 
 ## สิ่งที่ต้องมี (Prerequisites)
 
