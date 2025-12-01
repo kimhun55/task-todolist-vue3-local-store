@@ -2,12 +2,13 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import TaskList from './components/TaskList.vue';
 import TaskForm from './components/TaskForm.vue';
-import { PlusIcon } from '@heroicons/vue/24/outline';
+import { PlusIcon, Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
 
 const tasks = ref([]);
 const isModalOpen = ref(false);
 const editingTask = ref(null);
-const filter = ref('all'); // 'all', 'in-progress', 'completed'
+const filter = ref('all');
+const viewMode = ref('grid'); // 'all', 'in-progress', 'completed'
 
 onMounted(() => {
   const savedTasks = localStorage.getItem('todo-app-data');
@@ -89,38 +90,61 @@ const updateStatus = (task, newStatus) => {
     </header>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="flex justify-between items-center mb-6">
+      <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <h2 class="text-xl font-semibold text-gray-800">งานของฉัน</h2>
-        <div class="flex items-center gap-2 bg-white p-1 rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
-          <button 
-            @click="filter = 'all'" 
-            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'all' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-50']"
-          >
-            ทั้งหมด
-          </button>
-          <button 
-            @click="filter = 'pending'" 
-            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'pending' ? 'bg-gray-100 text-gray-700' : 'text-gray-600 hover:bg-gray-50']"
-          >
-            รอการทำงาน
-          </button>
-          <button 
-            @click="filter = 'in-progress'" 
-            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'in-progress' ? 'bg-yellow-100 text-yellow-700' : 'text-gray-600 hover:bg-gray-50']"
-          >
-            กำลังทำ
-          </button>
-          <button 
-            @click="filter = 'completed'" 
-            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'completed' ? 'bg-green-100 text-green-700' : 'text-gray-600 hover:bg-gray-50']"
-          >
-            เสร็จแล้ว
-          </button>
+        
+        <div class="flex items-center gap-4">
+          <!-- View Toggle -->
+          <div class="flex items-center bg-white p-1 rounded-lg shadow-sm border border-gray-200">
+            <button 
+              @click="viewMode = 'grid'" 
+              :class="['p-1.5 rounded-md transition-colors', viewMode === 'grid' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:bg-gray-50']"
+              title="มุมมองการ์ด"
+            >
+              <Squares2X2Icon class="w-5 h-5" />
+            </button>
+            <button 
+              @click="viewMode = 'list'" 
+              :class="['p-1.5 rounded-md transition-colors', viewMode === 'list' ? 'bg-blue-100 text-blue-700' : 'text-gray-500 hover:bg-gray-50']"
+              title="มุมมองรายการ"
+            >
+              <ListBulletIcon class="w-5 h-5" />
+            </button>
+          </div>
+
+          <!-- Filter -->
+          <div class="flex items-center gap-2 bg-white p-1 rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
+            <button 
+              @click="filter = 'all'" 
+              :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'all' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-50']"
+            >
+              ทั้งหมด
+            </button>
+            <button 
+              @click="filter = 'pending'" 
+              :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'pending' ? 'bg-gray-100 text-gray-700' : 'text-gray-600 hover:bg-gray-50']"
+            >
+              รอการทำงาน
+            </button>
+            <button 
+              @click="filter = 'in-progress'" 
+              :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'in-progress' ? 'bg-yellow-100 text-yellow-700' : 'text-gray-600 hover:bg-gray-50']"
+            >
+              กำลังทำ
+            </button>
+            <button 
+              @click="filter = 'completed'" 
+              :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'completed' ? 'bg-green-100 text-green-700' : 'text-gray-600 hover:bg-gray-50']"
+            >
+              เสร็จแล้ว
+            </button>
+          </div>
         </div>
       </div>
 
       <TaskList 
         :tasks="filteredTasks" 
+        :view-mode="viewMode"
         @delete="deleteTask" 
         @edit="openModal" 
         @update-status="updateStatus" 
