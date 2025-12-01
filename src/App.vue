@@ -49,7 +49,7 @@ const saveTask = (taskData) => {
     tasks.value.push({
       ...taskData,
       id: newId,
-      status: 'in-progress',
+      status: 'pending',
       createdAt: new Date().toISOString()
     });
   }
@@ -61,10 +61,10 @@ const deleteTask = (id) => {
   tasks.value = tasks.value.filter(t => t.id !== id);
 };
 
-const toggleStatus = (task) => {
+const updateStatus = (task, newStatus) => {
   const index = tasks.value.findIndex(t => t.id === task.id);
   if (index !== -1) {
-    tasks.value[index].status = task.status === 'completed' ? 'in-progress' : 'completed';
+    tasks.value[index].status = newStatus;
   }
 };
 </script>
@@ -91,22 +91,28 @@ const toggleStatus = (task) => {
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-semibold text-gray-800">งานของฉัน</h2>
-        <div class="flex items-center gap-2 bg-white p-1 rounded-lg shadow-sm border border-gray-200">
+        <div class="flex items-center gap-2 bg-white p-1 rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
           <button 
             @click="filter = 'all'" 
-            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors', filter === 'all' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-50']"
+            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'all' ? 'bg-blue-100 text-blue-700' : 'text-gray-600 hover:bg-gray-50']"
           >
             ทั้งหมด
           </button>
           <button 
+            @click="filter = 'pending'" 
+            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'pending' ? 'bg-gray-100 text-gray-700' : 'text-gray-600 hover:bg-gray-50']"
+          >
+            รอการทำงาน
+          </button>
+          <button 
             @click="filter = 'in-progress'" 
-            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors', filter === 'in-progress' ? 'bg-yellow-100 text-yellow-700' : 'text-gray-600 hover:bg-gray-50']"
+            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'in-progress' ? 'bg-yellow-100 text-yellow-700' : 'text-gray-600 hover:bg-gray-50']"
           >
             กำลังทำ
           </button>
           <button 
             @click="filter = 'completed'" 
-            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors', filter === 'completed' ? 'bg-green-100 text-green-700' : 'text-gray-600 hover:bg-gray-50']"
+            :class="['px-3 py-1.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap', filter === 'completed' ? 'bg-green-100 text-green-700' : 'text-gray-600 hover:bg-gray-50']"
           >
             เสร็จแล้ว
           </button>
@@ -117,7 +123,7 @@ const toggleStatus = (task) => {
         :tasks="filteredTasks" 
         @delete="deleteTask" 
         @edit="openModal" 
-        @toggle-status="toggleStatus" 
+        @update-status="updateStatus" 
       />
     </main>
 

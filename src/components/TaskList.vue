@@ -8,7 +8,7 @@ defineProps({
   }
 });
 
-defineEmits(['delete', 'edit', 'toggle-status']);
+defineEmits(['delete', 'edit', 'update-status']);
 </script>
 
 <template>
@@ -19,7 +19,7 @@ defineEmits(['delete', 'edit', 'toggle-status']);
       :task="task" 
       @delete="$emit('delete', $event)"
       @edit="$emit('edit', $event)"
-      @toggle-status="$emit('toggle-status', $event)"
+      @update-status="(t, s) => $emit('update-status', t, s)"
     />
   </div>
   <div v-if="tasks.length === 0" class="text-center py-12 text-gray-500">

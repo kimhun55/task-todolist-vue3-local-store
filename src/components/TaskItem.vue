@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { CalendarIcon, ClockIcon, TrashIcon, PencilIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
+import { CalendarIcon, ClockIcon, TrashIcon, PencilIcon, CheckCircleIcon, PlayIcon, ArrowUturnLeftIcon } from '@heroicons/vue/24/outline';
 import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/vue/24/solid';
 
 const props = defineProps({
@@ -10,16 +10,24 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['delete', 'edit', 'toggle-status']);
+const emit = defineEmits(['delete', 'edit', 'update-status']);
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return date.toLocaleDateString('th-TH', { month: 'short', day: 'numeric', year: 'numeric' });
 };
 
 const statusColor = computed(() => {
-  return props.task.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+  if (props.task.status === 'completed') return 'bg-green-100 text-green-800';
+  if (props.task.status === 'in-progress') return 'bg-yellow-100 text-yellow-800';
+  return 'bg-gray-100 text-gray-800';
+});
+
+const statusText = computed(() => {
+  if (props.task.status === 'completed') return 'เสร็จแล้ว';
+  if (props.task.status === 'in-progress') return 'กำลังทำ';
+  return 'รอการทำงาน';
 });
 </script>
 
@@ -34,7 +42,7 @@ const statusColor = computed(() => {
           {{ task.title }}
         </h3>
         <span :class="['px-2 py-1 text-xs font-semibold rounded-full', statusColor]">
-          {{ task.status === 'completed' ? 'เสร็จแล้ว' : 'กำลังทำ' }}
+          {{ statusText }}
         </span>
       </div>
       
@@ -58,9 +66,16 @@ const statusColor = computed(() => {
       </div>
 
       <div class="flex justify-end gap-2 pt-3 border-t border-gray-100 mt-auto">
-        <button @click="$emit('toggle-status', task)" class="p-2 text-gray-500 hover:text-green-600 transition-colors rounded-full hover:bg-green-50" title="เปลี่ยนสถานะ">
-          <component :is="task.status === 'completed' ? CheckCircleIconSolid : CheckCircleIcon" class="w-5 h-5" />
+        <button v-if="task.status === 'pending'" @click="$emit('update-status', task, 'in-progress')" class="p-2 text-gray-500 hover:text-blue-600 transition-colors rounded-full hover:bg-blue-50" title="เริ่มทำ">
+          <PlayIcon class="w-5 h-5" />
         </button>
+        <button v-if="task.status === 'in-progress'" @click="$emit('update-status', task, 'completed')" class="p-2 text-gray-500 hover:text-green-600 transition-colors rounded-full hover:bg-green-50" title="เสร็จสิ้น">
+          <CheckCircleIcon class="w-5 h-5" />
+        </button>
+        <button v-if="task.status === 'completed'" @click="$emit('update-status', task, 'in-progress')" class="p-2 text-gray-500 hover:text-yellow-600 transition-colors rounded-full hover:bg-yellow-50" title="ทำต่อ">
+          <ArrowUturnLeftIcon class="w-5 h-5" />
+        </button>
+        
         <button @click="$emit('edit', task)" class="p-2 text-gray-500 hover:text-blue-600 transition-colors rounded-full hover:bg-blue-50" title="แก้ไข">
           <PencilIcon class="w-5 h-5" />
         </button>
