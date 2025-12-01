@@ -45,6 +45,7 @@ const getStatusText = (status) => {
         :task="task" 
         @delete="$emit('delete', $event)"
         @edit="$emit('edit', $event)"
+        @view="$emit('view', $event)"
         @update-status="(t, s) => $emit('update-status', t, s)"
       />
     </div>
@@ -111,6 +112,9 @@ const getStatusText = (status) => {
                   </button>
                   <button v-if="task.status === 'completed'" @click="$emit('update-status', task, 'in-progress')" class="text-yellow-600 hover:text-yellow-900" title="ทำต่อ">
                     <ArrowUturnLeftIcon class="w-5 h-5" />
+                  </button>
+                  <button @click="$emit('view', task)" class="text-indigo-600 hover:text-indigo-900" title="ดูรายละเอียด">
+                    <EyeIcon class="w-5 h-5" />
                   </button>
                   <button @click="$emit('edit', task)" class="text-indigo-600 hover:text-indigo-900" title="แก้ไข">
                     <PencilIcon class="w-5 h-5" />

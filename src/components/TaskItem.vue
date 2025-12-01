@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { CalendarIcon, ClockIcon, TrashIcon, PencilIcon, CheckCircleIcon, PlayIcon, ArrowUturnLeftIcon } from '@heroicons/vue/24/outline';
+import { CalendarIcon, ClockIcon, TrashIcon, PencilIcon, CheckCircleIcon, PlayIcon, ArrowUturnLeftIcon, EyeIcon } from '@heroicons/vue/24/outline';
 import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/vue/24/solid';
 
 const props = defineProps({
@@ -10,7 +10,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['delete', 'edit', 'update-status']);
+const emit = defineEmits(['delete', 'edit', 'update-status', 'view']);
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -76,6 +76,9 @@ const statusText = computed(() => {
           <ArrowUturnLeftIcon class="w-5 h-5" />
         </button>
         
+        <button @click="$emit('view', task)" class="p-2 text-gray-500 hover:text-indigo-600 transition-colors rounded-full hover:bg-indigo-50" title="ดูรายละเอียด">
+          <EyeIcon class="w-5 h-5" />
+        </button>
         <button @click="$emit('edit', task)" class="p-2 text-gray-500 hover:text-blue-600 transition-colors rounded-full hover:bg-blue-50" title="แก้ไข">
           <PencilIcon class="w-5 h-5" />
         </button>
